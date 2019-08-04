@@ -41,8 +41,7 @@ def create_db():
         cmd = """CREATE TABLE IF NOT EXISTS passwords (
                     id integer PRIMARY KEY,
                     account text NOT NULL,
-                    password text NOT NULL,
-                    passwordgroup text);"""
+                    password text NOT NULL);"""
         c.execute(cmd)
 
     encryptDB(path, master_pass)
@@ -71,29 +70,20 @@ def add_password(master, account, password):
             if confirm.lower() == "n":
                 encryptDB(path, master)
                 return False
-        if group:
-            cmd = """INSERT INTO passwords(account, password, passwordgroup)
-                    VALUES (?, ?)"""
-            c.execute(cmd, (account, password, group))
-        else:
-            cmd = """INSERT INTO passwords(account, password)
-                    VALUES (?, ?)"""
-            c.execute(cmd, (account, password))
-
+        cmd = """INSERT INTO passwords(account, password)
+                VALUES (?, ?)"""
+        c.execute(cmd, (account, password))
     encryptDB(path, master)
     return True
 
-def get_password(account, master, group=None):
+def get_password(account, master):
     path = detect_path()
 
     # Setup DB
     conn = sqlite3.connect(path)
     with conn:
         c = conn.cursor()
-        if group:
-            c.execute("SELECT * FROM passwords WHERE account=? AND group=?", (account, group))
-        else:
-            c.execute("SELECT * FROM passwords WHERE account=?", (account))
+        c.execute("SELECT * FROM passwords WHERE account=?", (account))
         password = c.fetchone()
 
 

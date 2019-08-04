@@ -1,0 +1,5 @@
+# First make sure to update pip then install these requirements:
+#     $ pip install --upgrade -r requirements.txt
+
+pyAesCrypt
+pysqlite3

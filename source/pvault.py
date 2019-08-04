@@ -1,6 +1,7 @@
 # CLI Parser
 import sys
 from command_handler import command_handler
+from db import db_exists, create_db
 
 # PVault Version Number
 __version__ = "0.0.1"
@@ -38,6 +39,9 @@ if __name__ == "__main__":
         print("PVault", __version__)
 
     else:
+        if not db_exists():
+            create_db()
+
         command = sys.argv[1]
 
         # command list

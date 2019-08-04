@@ -1,7 +1,7 @@
 # Database Handler
 from getpass import getpass
 from platform import system
-from crypt import hash_pass, encrypt_pass, decrypt_pass
+from crypt import hash_pass, encrypt_pass, decrypt_pass, encryptDB, decryptDB
 import sqlite3
 import os
 
@@ -19,13 +19,19 @@ def detect_path():
     return path
 
 def db_exists():
-    return os.path.exists(detect_path())
+    return os.path.exists(detect_path() + ".aes")
 
 def create_db():
     path = detect_path()
 
     # Create and hash the master password
-    master_pass = getpass("Set a master password: ")
+    while True:
+        master_pass = getpass("Set a master password: ")
+        master_pass_2 = getpass("Enter master password again: ")
+        if master_pass == master_pass_2:
+            del master_pass_2
+            break
+        print("The passwords don't match!\n")
     master_pass = hash_pass(master_pass)
 
     # Setup DB
@@ -36,13 +42,21 @@ def create_db():
                     id integer PRIMARY KEY,
                     account text NOT NULL,
                     password text NOT NULL,
-                    group text
-                );"""
+                    passwordgroup text);"""
         c.execute(cmd)
-    conn.close()
 
-def add_password(master, account, password, group=None):
+    encryptDB(path, master_pass)
+
+def check_master(master):
     path = detect_path()
+    if decryptDB(path, master, inplace=False):
+        os.remove(path)
+        return True
+    return False
+
+def add_password(master, account, password):
+    path = detect_path()
+    decryptDB(path, master)
 
     # Encrypt pass
     password = encrypt_pass(password, master)
@@ -51,15 +65,23 @@ def add_password(master, account, password, group=None):
     conn = sqlite3.connect(path)
     with conn:
         c = conn.cursor()
+        c.execute("SELECT * FROM passwords WHERE account=?", (account,))
+        if c.fetchone():
+            confirm = input("The password already exists; Do you wish to overwrite it (y/n)? ")
+            if confirm.lower() == "n":
+                encryptDB(path, master)
+                return False
         if group:
-            cmd = """INSERT INTO passwords(account, password, group)
+            cmd = """INSERT INTO passwords(account, password, passwordgroup)
                     VALUES (?, ?)"""
             c.execute(cmd, (account, password, group))
         else:
             cmd = """INSERT INTO passwords(account, password)
                     VALUES (?, ?)"""
             c.execute(cmd, (account, password))
-    conn.close()
+
+    encryptDB(path, master)
+    return True
 
 def get_password(account, master, group=None):
     path = detect_path()
@@ -73,7 +95,7 @@ def get_password(account, master, group=None):
         else:
             c.execute("SELECT * FROM passwords WHERE account=?", (account))
         password = c.fetchone()
-    conn.close()
+
 
     # Decrypt pass
     password = decrypt_pass(password, master)
@@ -89,7 +111,7 @@ def get_passwords(account, master):
         c = conn.cursor()
         c.execute("SELECT * FROM passwords")
         passwords = [item[1] for item in c.fetchall()][1:]
-    conn.close()
+
 
     # Decrypt passwords
     for _ in range(len(passwords)):

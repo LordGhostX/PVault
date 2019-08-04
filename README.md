@@ -15,10 +15,9 @@ Got the inspiration for this project from my gee [@oluwafenyi](https://github.co
 * [x] Password Generation Functionality
 * [x] Clipboard integration
 * [x] Database integration for saving passwords
-* [x] Retrieving saved passwords
 
 ## TODO
-* [ ] Project Merge
+* [ ] Retrieving saved passwords
 * [ ] Deleting saved passwords
 * [ ] Password reset - Individual, Mass
 * [ ] Encrypt password before storing

@@ -14,11 +14,13 @@ Got the inspiration for this project from my gee [@oluwafenyi](https://github.co
 * [x] Master password integration & encryption
 * [x] Password Generation Functionality
 * [x] Clipboard integration
+* [x] Database integration for saving passwords
 
 ## TODO
-* [ ] Database integration for saving passwords
 * [ ] Retrieving saved passwords
+* [ ] Deleting saved passwords
 * [ ] Password reset - Individual, Mass
+* [ ] Project Merge
 
 ## Author
 * LordGhostX

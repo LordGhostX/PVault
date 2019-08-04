@@ -21,7 +21,7 @@ def detect_path():
 def db_exists():
     return os.path.exists(detect_path())
 
-def create_database():
+def create_db():
     path = detect_path()
 
     # Create and hash the master password
@@ -40,3 +40,22 @@ def create_database():
                 );"""
         c.execute(cmd)
     conn.close()
+
+def add_password(account, password, group=None):
+    path = detect_path()
+
+    # Setup DB
+    conn = sqlite3.connect(path)
+    with conn:
+        c = conn.cursor()
+        if group:
+            cmd = """INSERT INTO passwords(account, password, group)
+                    VALUES (?, ?)"""
+            c.execute(cmd, (account, password, group))
+        else:
+            cmd = """INSERT INTO passwords(account, password)
+                    VALUES (?, ?)"""
+            c.execute(cmd, (account, password))
+    conn.close()
+
+    return c.lastrowid

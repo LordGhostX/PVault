@@ -23,3 +23,9 @@ def hash_pass(word, algo="sha512", salt="Gu6#&3_==[';;/~~"):
     hash = hash_rounding(hash, algo=algo)
 
     return hash
+
+def encrypt_pass(plain_pass, master_password):
+    return plain_pass
+
+def decrypt_pass(hashed_pass, master_password):
+    return hashed_pass

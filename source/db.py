@@ -1,7 +1,7 @@
 # Database Handler
 from getpass import getpass
 from platform import system
-from crypt import hash_pass
+from crypt import hash_pass, encrypt_pass, decrypt_pass
 import sqlite3
 import os
 
@@ -41,8 +41,11 @@ def create_db():
         c.execute(cmd)
     conn.close()
 
-def add_password(account, password, group=None):
+def add_password(master, account, password, group=None):
     path = detect_path()
+
+    # Encrypt pass
+    password = encrypt_pass(password, master)
 
     # Setup DB
     conn = sqlite3.connect(path)
@@ -58,4 +61,38 @@ def add_password(account, password, group=None):
             c.execute(cmd, (account, password))
     conn.close()
 
-    return c.lastrowid
+def get_password(account, master, group=None):
+    path = detect_path()
+
+    # Setup DB
+    conn = sqlite3.connect(path)
+    with conn:
+        c = conn.cursor()
+        if group:
+            c.execute("SELECT * FROM passwords WHERE account=? AND group=?", (account, group))
+        else:
+            c.execute("SELECT * FROM passwords WHERE account=?", (account))
+        password = c.fetchone()
+    conn.close()
+
+    # Decrypt pass
+    password = decrypt_pass(password, master)
+
+    return password
+
+def get_passwords(account, master):
+    path = detect_path()
+
+    # Setup DB
+    conn = sqlite3.connect(path)
+    with conn:
+        c = conn.cursor()
+        c.execute("SELECT * FROM passwords")
+        passwords = [item[1] for item in c.fetchall()][1:]
+    conn.close()
+
+    # Decrypt passwords
+    for _ in range(len(passwords)):
+        passwords[_] = decrypt_pass(passwords[_], master)
+
+    return passwords

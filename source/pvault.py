@@ -41,8 +41,8 @@ if __name__ == "__main__":
         command = sys.argv[1]
 
         # command list
-        commands = []
+        commands = ["generate"]
         if command in commands:
-            command_handler(command)
+            command_handler(command, sys.argv[2:])
         else:
             print(error_message(command))

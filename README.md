@@ -12,11 +12,11 @@ Got the inspiration for this project from my gee [@oluwafenyi](https://github.co
 ## Current Progress
 * [x] Write CLI parser
 * [x] Master password integration & encryption
+* [x] Password Generation Functionality
+* [x] Clipboard integration
 
 ## TODO
-* [ ] Password Generation Functionality
 * [ ] Database integration for saving passwords
-* [ ] Clipboard integration
 * [ ] Retrieving saved passwords
 * [ ] Password reset - Individual, Mass
 

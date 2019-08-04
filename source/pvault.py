@@ -1,5 +1,9 @@
 # CLI Parser
 import sys
+from command_handler import command_handler
+
+# PVault Version Number
+__version__ = "0.0.1"
 
 def help_message():
     message = """usage: pvault [command] [options]
@@ -21,9 +25,6 @@ Try `pvault -h' for more information.""".format(command)
     return message
 
 if __name__ == "__main__":
-    # PVault Version Number
-    version_number = "0.0.1"
-
     # If the script was ran directly
     if len(sys.argv) <= 1:
         print(help_message())
@@ -34,8 +35,14 @@ if __name__ == "__main__":
 
     # version message
     elif sys.argv[1] == "--version":
-        print("PVault", version_number)
+        print("PVault", __version__)
 
     else:
         command = sys.argv[1]
-        print(error_message(command))
+
+        # command list
+        commands = []
+        if command in commands:
+            command_handler(command)
+        else:
+            print(error_message(command))

@@ -7,23 +7,24 @@ from generator import generate_password
 import sqlite3
 import os
 
-__dbPath__ = ""
+__dbName__ = "pvault.db" # Password Database Name
 
 def detect_path():
     # Detect OS so we know where to store DB file
-    if "Windows" == system():
-        path = __dbPath__ + os.path.join(os.getenv("APPDATA"), "pvault.db")
-    elif "Linux" == system():
-        path = __dbPath__ + os.path.join(os.getenv("APPDATA"), "pvault.db")
+    # Supports Windows, Linux, MAC
+    if system() in ["Windows", "Linux", "Darwin"]:
+        path = os.path.join(os.path.expanduser("~"), __dbPath__)
     else:
-        path = "pvault.db"
+        path = __dbPath__
 
     return path
 
 def db_exists():
+    # Checks if the password database exists
     return os.path.exists(detect_path() + ".aes")
 
 def create_db():
+    # Creates our password database initiating it with our master password
     path = detect_path()
 
     # Create and hash the master password
@@ -49,6 +50,7 @@ def create_db():
     encryptDB(path, master_pass)
 
 def check_master(master):
+    # Check if a given master password is valid or not
     path = detect_path()
     if decryptDB(path, master, inplace=False):
         os.remove(path)
@@ -56,6 +58,7 @@ def check_master(master):
     return False
 
 def add_password(master, account, password):
+    # Adds a new password profile to the database
     path = detect_path()
     decryptDB(path, master)
 
@@ -69,6 +72,7 @@ def add_password(master, account, password):
         c.execute("SELECT * FROM passwords WHERE account=?", (account,))
         r = True
         if c.fetchone():
+            # the account already exists; so replace it
             confirm = input("The password already exists; Do you wish to overwrite it (y/n)? ")
             r = False
             if confirm.lower() in ["y", "yes"]:
@@ -85,6 +89,7 @@ def add_password(master, account, password):
     return True
 
 def get_passwords(master, account):
+    # Get passwords from the database
     path = detect_path()
     decryptDB(path, master)
 
@@ -109,6 +114,7 @@ def get_passwords(master, account):
     encryptDB(path, master)
 
 def resetDB(master):
+    # Reset all the passwords in the database
     path = detect_path()
     decryptDB(path, master)
 
@@ -129,6 +135,7 @@ def resetDB(master):
     encryptDB(path, master)
 
 def delete_profile(master, account=None):
+    # Delete a password profile from the database
     path = detect_path()
     decryptDB(path, master)
 

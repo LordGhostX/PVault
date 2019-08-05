@@ -74,17 +74,17 @@ Got the inspiration for this project from my gee [@oluwafenyi](https://github.co
   "Completely deleted password database"
   ```
 10. Other useful commands
-    1. Get Help
+    1. Getting Help
     ```bash
     $ pvault -h
     $ pvault --help
     ```
-    2. Get Version numbers
+    2. Get Version number
     ```bash
     $ pvault --version
     ```
 
-###### You will be asked for a master password the very first time you run the script. The master password is what protects the other passwords and should be kept secure because it can't be reset.
+##### You will be asked for a master password the very first time you run the script. The master password is what protects the other passwords and should be kept secure because it can't be reset.
 
 ## Current Progress
 * [x] Write CLI parser
@@ -95,9 +95,10 @@ Got the inspiration for this project from my gee [@oluwafenyi](https://github.co
 * [x] Retrieving saved passwords
 * [x] Password reset - Individual, Mass
 * [x] Deleting saved passwords
+* [x] Encrypt password before storing
 
 ## TODO
-* [ ] Encrypt password before storing
+* [ ] Nothing for now
 
 ## Author
 * LordGhostX

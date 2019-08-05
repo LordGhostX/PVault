@@ -1,5 +1,3 @@
-# First make sure to update pip then install these requirements:
-#     $ pip install --upgrade -r requirements.txt
-
-pyAesCrypt
-pysqlite3
+cryptography==2.7
+pyperclip==1.7.0
+pyAesCrypt==0.4.3

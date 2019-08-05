@@ -3,6 +3,7 @@ from getpass import getpass
 from platform import system
 from clipboard import copy_text
 from crypt import hash_pass, encrypt_pass, decrypt_pass, encryptDB, decryptDB
+from generator import generate_password
 import sqlite3
 import os
 
@@ -68,9 +69,13 @@ def add_password(master, account, password):
         c.execute("SELECT * FROM passwords WHERE account=?", (account,))
         r = True
         if c.fetchone():
-            confirm = input("The password already exists; Do you wish to still add it (y/n)? ")
-            if confirm.lower() == "n":
-                r = False
+            confirm = input("The password already exists; Do you wish to overwrite it (y/n)? ")
+            r = False
+            if confirm.lower() in ["y", "yes"]:
+                cmd = """UPDATE passwords
+                         SET password = ?
+                         WHERE account = ?"""
+                c.execute(cmd, (password, account))
         if r:
             cmd = """INSERT INTO passwords(account, password)
                     VALUES (?, ?)"""
@@ -100,5 +105,25 @@ def get_passwords(master, account):
             passwords = c.fetchall()
             for password in passwords:
                 print("{} = {}".format(password[1], decrypt_pass(password[2], master)))
+    conn.close()
+    encryptDB(path, master)
+
+def resetDB(master):
+    path = detect_path()
+    decryptDB(path, master)
+
+    # Setup DB
+    conn = sqlite3.connect(path)
+    with conn:
+        c = conn.cursor()
+        c.execute("SELECT * FROM passwords")
+        passwords = c.fetchall()
+        for password in passwords:
+            new_pass = encrypt_pass(generate_password(), master)
+            cmd = """UPDATE passwords
+                     SET password = ?
+                     WHERE id = ?"""
+            c.execute(cmd, (new_pass, password[0]))
+
     conn.close()
     encryptDB(path, master)

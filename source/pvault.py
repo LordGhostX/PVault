@@ -2,7 +2,6 @@
 import sys
 from command_handler import command_handler, get_commands
 from db import db_exists, create_db
-from messages import help_message, error_message
 
 def help_message():
     message = """usage: pvault [command] [options]
@@ -14,10 +13,11 @@ optional arguments:
   -h, --help  show this help message and exit
   --version   show program's version number and exit
   generate    generates a random password to your clipboard
-              [account name] sets a unique identifier for your password and save
+              [account name] sets a unique identifier for your password and save; overwrites if exists
               [account name] [password] saves your password given your custom password
   account     shows all saved passwords
-              [account name] shows the password of a particular user only"""
+              [account name] shows the password of a particular user only
+  reset       reset all passwords in the database"""
 
     return message
 

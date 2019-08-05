@@ -16,10 +16,10 @@ Got the inspiration for this project from my gee [@oluwafenyi](https://github.co
 * [x] Clipboard integration
 * [x] Database integration for saving passwords
 * [x] Retrieving saved passwords
+* [x] Password reset - Individual, Mass
 
 ## TODO
 * [ ] Deleting saved passwords
-* [ ] Password reset - Individual, Mass
 * [ ] Encrypt password before storing
 
 ## Author

@@ -17,7 +17,9 @@ optional arguments:
               [account name] [password] saves your password given your custom password
   account     shows all saved passwords
               [account name] shows the password of a particular user only
-  reset       reset all passwords in the database"""
+  reset       reset all passwords in the database
+  delete      delete all passwords in the database
+              [account name] delete only this user in the database"""
 
     return message
 
@@ -29,7 +31,7 @@ Try `pvault -h' for more information.""".format(command)
     return message
 
 # PVault Version Number
-__version__ = "0.0.1"
+__version__ = "0.3.0"
 
 if __name__ == "__main__":
     # If the script was ran directly

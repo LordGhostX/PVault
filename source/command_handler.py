@@ -1,7 +1,7 @@
 # Command Handler
 from clipboard import copy_text
 from generator import generate_password
-from db import check_master, add_password, get_passwords, resetDB
+from db import check_master, add_password, get_passwords, resetDB, delete_profile
 from getpass import getpass
 from crypt import hash_pass
 
@@ -38,7 +38,7 @@ def account(args):
     get_passwords(master, account)
 
 def reset(args):
-    master = hash_pass(getpass("Enter master password to get account password: "))
+    master = hash_pass(getpass("Enter master password to reset account password: "))
     if not check_master(master):
         print("Incorrect master password")
         return
@@ -49,8 +49,35 @@ def reset(args):
     else:
         print("Cancelled Operation!")
 
+def delete(args):
+    master = hash_pass(getpass("Enter master password to delete account password: "))
+    if not check_master(master):
+        print("Incorrect master password")
+        return
+
+    r = True
+    if len(args) == 0:
+        confirm = input("Are you sure you want to delete all password in the database (y/n)? ")
+        if confirm.lower() in ["y", "yes"]:
+            delete_profile(master)
+            print("Completely deleted password database")
+            r = False
+        else:
+            r = True
+    else:
+        confirm = input("Are you sure you want to delete the user password in the database (y/n)? ")
+        if confirm.lower() in ["y", "yes"]:
+            delete_profile(master, args[0])
+            print("Completely deleted user password in the database")
+            r = False
+        else:
+            r = True
+
+    if r:
+        print("Cancelled Operation!")
+
 def get_commands():
-    return {"generate": generate, "account": account, "reset": reset}
+    return {"generate": generate, "account": account, "reset": reset, "delete": delete}
 
 def command_handler(command, args):
      commands = get_commands()

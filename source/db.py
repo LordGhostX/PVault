@@ -127,3 +127,20 @@ def resetDB(master):
 
     conn.close()
     encryptDB(path, master)
+
+def delete_profile(master, account=None):
+    path = detect_path()
+    decryptDB(path, master)
+
+    # Setup DB
+    conn = sqlite3.connect(path)
+    with conn:
+        c = conn.cursor()
+        if account:
+            cmd = "DELETE FROM passwords WHERE account = ?"
+            c.execute(cmd, (account,))
+        else:
+            cmd = "DELETE FROM passwords"
+            c.execute(cmd)
+    conn.close()
+    encryptDB(path, master)

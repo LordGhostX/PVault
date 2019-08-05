@@ -1,10 +1,8 @@
 # CLI Parser
 import sys
-from command_handler import command_handler
+from command_handler import command_handler, get_commands
 from db import db_exists, create_db
-
-# PVault Version Number
-__version__ = "0.0.1"
+from messages import help_message, error_message
 
 def help_message():
     message = """usage: pvault [command] [options]
@@ -14,7 +12,12 @@ Generate, store & retrieve your passwords easily & efficiently.
 
 optional arguments:
   -h, --help  show this help message and exit
-  --version   show program's version number and exit"""
+  --version   show program's version number and exit
+  generate    generates a random password to your clipboard
+              [account name] sets a unique identifier for your password and save
+              [account name] [password] saves your password given your custom password
+  account     shows all saved passwords
+              [account name] shows the password of a particular user only"""
 
     return message
 
@@ -24,6 +27,9 @@ usage: pvault [command] [options]
 Try `pvault -h' for more information.""".format(command)
 
     return message
+
+# PVault Version Number
+__version__ = "0.0.1"
 
 if __name__ == "__main__":
     # If the script was ran directly
@@ -45,7 +51,7 @@ if __name__ == "__main__":
         command = sys.argv[1]
 
         # command list
-        commands = ["generate"]
+        commands = get_commands()
         if command in commands:
             command_handler(command, sys.argv[2:])
         else:

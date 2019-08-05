@@ -1,6 +1,7 @@
 # Database Handler
 from getpass import getpass
 from platform import system
+from clipboard import copy_text
 from crypt import hash_pass, encrypt_pass, decrypt_pass, encryptDB, decryptDB
 import sqlite3
 import os
@@ -43,7 +44,7 @@ def create_db():
                     account text NOT NULL,
                     password text NOT NULL);"""
         c.execute(cmd)
-
+    conn.close()
     encryptDB(path, master_pass)
 
 def check_master(master):
@@ -65,46 +66,39 @@ def add_password(master, account, password):
     with conn:
         c = conn.cursor()
         c.execute("SELECT * FROM passwords WHERE account=?", (account,))
+        r = True
         if c.fetchone():
-            confirm = input("The password already exists; Do you wish to overwrite it (y/n)? ")
+            confirm = input("The password already exists; Do you wish to still add it (y/n)? ")
             if confirm.lower() == "n":
-                encryptDB(path, master)
-                return False
-        cmd = """INSERT INTO passwords(account, password)
-                VALUES (?, ?)"""
-        c.execute(cmd, (account, password))
+                r = False
+        if r:
+            cmd = """INSERT INTO passwords(account, password)
+                    VALUES (?, ?)"""
+            c.execute(cmd, (account, password))
+    conn.close()
     encryptDB(path, master)
     return True
 
-def get_password(account, master):
+def get_passwords(master, account):
     path = detect_path()
+    decryptDB(path, master)
 
     # Setup DB
     conn = sqlite3.connect(path)
     with conn:
         c = conn.cursor()
-        c.execute("SELECT * FROM passwords WHERE account=?", (account))
-        password = c.fetchone()
-
-
-    # Decrypt pass
-    password = decrypt_pass(password, master)
-
-    return password
-
-def get_passwords(account, master):
-    path = detect_path()
-
-    # Setup DB
-    conn = sqlite3.connect(path)
-    with conn:
-        c = conn.cursor()
-        c.execute("SELECT * FROM passwords")
-        passwords = [item[1] for item in c.fetchall()][1:]
-
-
-    # Decrypt passwords
-    for _ in range(len(passwords)):
-        passwords[_] = decrypt_pass(passwords[_], master)
-
-    return passwords
+        if account:
+            c.execute("SELECT * FROM passwords WHERE account=?", (account,))
+            password = c.fetchone()
+            if password:
+                copy_text(decrypt_pass(password[2], master))
+                print("Password has been copied to your clipboard!")
+            else:
+                print("The specified account does not exist!")
+        else:
+            c.execute("SELECT * FROM passwords")
+            passwords = c.fetchall()
+            for password in passwords:
+                print("{} = {}".format(password[1], decrypt_pass(password[2], master)))
+    conn.close()
+    encryptDB(path, master)

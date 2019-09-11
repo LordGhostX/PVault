@@ -7,7 +7,7 @@ from generator import generate_password
 import sqlite3
 import os
 
-__dbName__ = "pvault.db" # Password Database Name
+__dbPath__ = "pvault.db" # Password Database Name
 
 def detect_path():
     # Detect OS so we know where to store DB file

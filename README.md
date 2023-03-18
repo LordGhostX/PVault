@@ -7,81 +7,119 @@ Got the inspiration for this project from my gee [@oluwafenyi](https://github.co
 **🌟 Star the repo if you like what you see**
 
 ## Requirements
-* Python 3
+* [Python 3](https://www.python.org/downloads/)
+
+## Installation and Setup
+- Clone the repo
+    ```console
+    foo@bar:~$ git clone https://github.com/LordGhostX/PVault.git
+    ```
+- Change directory to PVault
+    ```console
+    foo@bar:~$ cd PVault
+    ```
+- Install dependencies in `requirements.txt`
+    ```console
+    foo@bar:~ /PVault$ pip3 install --upgrade -r requirements.txt
+    ```
+- Change directory to `source` folder to access pvaualt
+     ```console
+    foo@bar:~ /PVault$ cd source
+    ```
 
 ## Usage
-1. Have all the necessary requirements
-    1. Install python3
-    2. Install the `requirements.txt`
-    ```bash
-    $ pip3 install --upgrade -r requirements.txt
+
+1. Generating random passwords
+    ```console
+    foo@bar:~ /PVault/source$ python pvault.py generate
+    Newly generated password copied to clipboard!
     ```
-2. Clone the repo
-3. Generating random passwords
-    ```bash
-    $ pvault generate
-    "Newly generated password copied to clipboard!"
+    
+    ### [*optional*] To use `$pvault` instead of `python pvault.py` - (**Mac/Linux**)
+    - Create an **environment variable** `pvault` :
+        ```console
+        foo@bar:~ /PVault/source$ export pvault='python pvault.py'
+        ```
+    - You can now use `$pvault` instead of `python pvault.py`
+
+2. Generating and saving password for an account
+    ```console
+    foo@bar:~ /PVault/source$ python pvault.py generate gmail.com
+    Newly saved password copied to clipboard!
     ```
-4. Generating and saving password for an account
+
     ```bash
-    $ pvault generate gmail.com
-    "Newly saved password copied to clipboard!"
+    # You can also set a custom password
     ```
-    you can also set a custom password
+
+    ```console
+    foo@bar:~ /PVault/source$ python pvault.py generate yahoo.com myverysecurepassword
+    Newly saved password copied to clipboard!
+    ```
+
+3. Getting a saved password
+    ```console
+    foo@bar:~ /PVault/source$ python pvault.py account gmail
+    Password has been copied to your clipboard!
+    ```
+
+4. Getting all saved passwords
+    ```console
+    foo@bar:~ /PVault/source$ python pvault.py account
+    gmail = 1_%ue9~M/xDaht9F1oZ9
+    gmails = myverysecurepassword
+    ```
+
+5. Overwriting previously saved password
+    ```console
+    foo@bar:~ /PVault/source$ python pvault.py generate gmail
+    The password already exists; Do you wish to overwrite it (y/n)? y
+    Newly saved password copied to clipboard!
+    ```
+
     ```bash
-    $ pvault generate yahoo.com myverysecurepassword
-    "Newly saved password copied to clipboard!"
+    # You can also set a custom password
     ```
-5. Getting a saved password
+    
+    ```console
+    foo@bar:~ /PVault/source$ python pvault.py generate gmail mynewsecurepassword
+    The password already exists; Do you wish to overwrite it (y/n)? y
+    Newly saved password copied to clipboard!
+    ```
+
+6. Resetting all passwords
+    ```console
+    foo@bar:~ /PVault/source$ python pvault.py reset
+    Are you sure you want to reset all password in the database (y/n)? y
+    Completely reset password database
+    ```
+
+7. Deleting saved passwords
+    ```console
+    foo@bar:~ /PVault/source$ python pvault.py delete gmail
+    Are you sure you want to delete the user password in the database (y/n)? y
+    Completely deleted user password in the database
+    ```
+
     ```bash
-    $ pvault account gmail
-    "Password has been copied to your clipboard!"
+    # You can also delete all the passwords at once
     ```
-6. Getting all saved passwords
-    ```bash
-    $ pvault account
-    "gmail = 1_%ue9~M/xDaht9F1oZ9"
-    "gmails = myverysecurepassword"
+
+    ```console
+    foo@bar:~ /PVault/source$ python pvault.py delete
+    Are you sure you want to delete all password in the database (y/n)? y
+    Completely deleted password database
     ```
-7. Overwriting previously saved password
-    ```bash
-    $ pvault generate gmail
-    "The password already exists; Do you wish to overwrite it (y/n)? y"
-    "Newly saved password copied to clipboard!"
-    ```
-    you can also set a custom password
-    ```bash
-    $ pvault generate gmail mynewsecurepassword
-    "The password already exists; Do you wish to overwrite it (y/n)? y"
-    "Newly saved password copied to clipboard!"
-    ```
-8. Resetting all passwords
-  ```bash
-  $ pvault reset
-  "Are you sure you want to reset all password in the database (y/n)? y"
-  "Completely reset password database"
-  ```
-9. Deleting saved passwords
-  ```bash
-  $ pvault delete gmail
-  "Are you sure you want to delete the user password in the database (y/n)? y"
-  "Completely deleted user password in the database"
-  ```
-  you can also delete all the passwords at once
-  ```bash
-  $ pvault delete
-  "Are you sure you want to delete all password in the database (y/n)? y"
-  "Completely deleted password database"
-  ```
-10. Other useful commands
+    
+8. Other useful commands
     1. Getting Help
-    ```bash
-    $ pvault -h
-    $ pvault --help
+    ```console
+    foo@bar:~ /PVault/source$ python pvault.py -h
+    foo@bar:~ /PVault/source$ python pvault.py --help
     ```
     2. Get Version number
-    ```bash
-    $ pvault --version
+    ```console
+    foo@bar:~ /PVault/source$ python pvault.py --version
     ```
 
 ##### You will be asked for a master password the very first time you run the script. The master password is what protects the other passwords and should be kept secure because it can't be reset.
@@ -102,6 +140,9 @@ Got the inspiration for this project from my gee [@oluwafenyi](https://github.co
 
 ## Author
 * LordGhostX
+
+## Contributor
+* [@akins-dev](https://github.com/akins-dev)
 
 ## License
 [MIT](https://opensource.org/licenses/MIT)

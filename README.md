@@ -22,7 +22,7 @@ Got the inspiration for this project from my gee [@oluwafenyi](https://github.co
     ```console
     foo@bar:~ /PVault$ pip3 install --upgrade -r requirements.txt
     ```
-- Change directory to `source` folder to access pvaualt
+- Change directory to `source` folder to access pvault
      ```console
     foo@bar:~ /PVault$ cd source
     ```
